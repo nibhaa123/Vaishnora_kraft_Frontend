@@ -1,6 +1,6 @@
 import { getCustomer } from './auth'
 
-const backendUrl = import.meta.env.VITE_BACKEND_URL || 'https://vaishnora-kraft.onrender.com'
+const backendUrl = import.meta.env.VITE_BACKEND_URL || 'https://vaishnora-kraft-backend.onrender.com'
 
 export const apiFetch = (path, options = {}) => {
   const customer = getCustomer()
