@@ -1,7 +1,11 @@
 import { getCustomer } from './auth'
 
+const defaultBackendUrl = import.meta.env.DEV
+  ? 'http://localhost:4000'
+  : 'https://vaishnora-kraft-backend.onrender.com'
+
 export const backendUrl = (
-  import.meta.env.VITE_BACKEND_URL || 'https://vaishnora-kraft-backend.onrender.com'
+  import.meta.env.VITE_BACKEND_URL || defaultBackendUrl
 ).replace(/\/$/, '')
 
 export const apiFetch = (path, options = {}) => {
