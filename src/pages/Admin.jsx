@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { apiFetch, readApiError } from '../utils/api'
-
-const API_BASE_URL =
-  import.meta.env.VITE_API_URL || 'http://localhost:4000'
+import { apiFetch, getBackendUrl, readApiError } from '../utils/api'
 
 const emptyProduct = {
   name: '',
@@ -26,7 +23,7 @@ const getMediaUrl = (url) => {
     return url
   }
 
-  return `${API_BASE_URL}${url}`
+  return getBackendUrl(url)
 }
 
 const getFirstMedia = (media) => {

@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { saveCustomer } from '../utils/auth'
+import { apiFetch } from '../utils/api'
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const mobilePattern = /^[6-9]\d{9}$/
@@ -28,7 +29,7 @@ const Register = () => {
     setIsSubmitting(true)
     setError('')
     try {
-      const response = await fetch('/api/auth/register', {
+      const response = await apiFetch('/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, identifier: value, password }),

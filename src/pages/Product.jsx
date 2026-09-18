@@ -5,11 +5,14 @@ import { getCustomer } from '../utils/auth'
 import { formatCurrency } from '../utils/format'
 import { addToCart } from '../utils/cartStore'
 import { isWishlisted, toggleWishlist } from '../utils/wishlistStore'
+import { apiFetch, getBackendUrl } from '../utils/api'
 
 const Product = () => {
   const { id } = useParams()
   const products = getProducts()
-  const product = products.find((item) => item._id === id) || products[0]
+  const [product, setProduct] = useState(
+    () => products.find((item) => item._id === id) || products[0]
+  )
   const [giftWrap, setGiftWrap] = useState(false)
   const [giftMessage, setGiftMessage] = useState('')
   const [reviews, setReviews] = useState([])
@@ -21,10 +24,28 @@ const Product = () => {
   const [isFavorite, setIsFavorite] = useState(isWishlisted(product._id))
 
   useEffect(() => {
+    let isCurrent = true
+
+    apiFetch(`/api/products/${id}`)
+      .then(async (response) => {
+        if (!response.ok) throw new Error('Product is unavailable.')
+        return response.json()
+      })
+      .then((result) => {
+        if (isCurrent) setProduct(result)
+      })
+      .catch(() => {
+        // Keep the locally cached product available if the API is offline.
+      })
+
+    return () => { isCurrent = false }
+  }, [id])
+
+  useEffect(() => {
     setIsFavorite(isWishlisted(product._id))
 
     let isCurrent = true
-    fetch(`/api/products/${product._id}/reviews`)
+    apiFetch(`/api/products/${product._id}/reviews`)
       .then(async (response) => {
         const result = await response.json()
         if (!response.ok) throw new Error(result.error || 'Reviews are temporarily unavailable.')
@@ -49,14 +70,14 @@ const Product = () => {
     setIsSubmittingReview(true)
     setReviewError('')
     try {
-      const response = await fetch(`/api/products/${product._id}/reviews`, {
+      const response = await apiFetch(`/api/products/${product._id}/reviews`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ customerId: customer.id, customerName: customer.name, rating, comment }),
       })
       const result = await response.json()
       if (!response.ok) throw new Error(result.error || 'Could not add review')
-      setReviews((currentReviews) => [result.review, ...currentReviews])
+      setReviews((currentReviews) => [result, ...currentReviews])
       setComment('')
     } catch (error) {
       setReviewError(error.message)
@@ -83,8 +104,8 @@ const Product = () => {
       <Link to="/collection" className="text-sm font-medium text-teal-800 hover:text-teal-950">&lt;- Back to collection</Link>
       <div className="mt-8 grid gap-10 lg:grid-cols-2">
         <div className="space-y-4">
-          <div className="aspect-[4/5] bg-slate-100"><img src={product.image[0]} alt={product.name} className="h-full w-full object-cover" /></div>
-          {product.video?.[0] && <div className="overflow-hidden bg-slate-950"><video src={product.video[0]} controls muted playsInline className="max-h-[420px] w-full object-contain" /></div>}
+          <div className="aspect-[4/5] bg-slate-100"><img src={getBackendUrl(product.image[0])} alt={product.name} className="h-full w-full object-cover" /></div>
+          {product.video?.[0] && <div className="overflow-hidden bg-slate-950"><video src={getBackendUrl(product.video[0])} controls muted playsInline className="max-h-[420px] w-full object-contain" /></div>}
         </div>
         <div className="flex flex-col justify-center">
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-teal-700">{product.category} / {product.subCategory}</p>

@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
-import { apiFetch, readApiError } from '../utils/api'
+import { apiFetch, getBackendUrl, readApiError } from '../utils/api'
 import { formatCurrency } from '../utils/format'
 
 const Collection = () => {
@@ -134,10 +134,10 @@ const Collection = () => {
   // Product image
   const getProductImage = (product) => {
     if (Array.isArray(product.image)) {
-      return product.image[0] || ''
+      return getBackendUrl(product.image[0] || '')
     }
 
-    return product.image || ''
+    return getBackendUrl(product.image || '')
   }
 
   // Category change

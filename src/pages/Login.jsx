@@ -6,6 +6,7 @@ import {
   useSearchParams
 } from 'react-router-dom'
 import { saveCustomer } from '../utils/auth'
+import { apiFetch } from '../utils/api'
 
 const Login = () => {
   const navigate = useNavigate()
@@ -43,7 +44,7 @@ const Login = () => {
     setMessage('')
 
     try {
-      const response = await fetch('/api/auth/login', {
+      const response = await apiFetch('/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -91,7 +92,7 @@ const Login = () => {
     setIsSubmitting(true)
 
     try {
-      const response = await fetch('/api/auth/otp/send', {
+      const response = await apiFetch('/api/auth/otp/send', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -138,7 +139,7 @@ const Login = () => {
     setIsSubmitting(true)
 
     try {
-      const response = await fetch('/api/auth/otp/verify', {
+      const response = await apiFetch('/api/auth/otp/verify', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -192,7 +193,7 @@ const Login = () => {
     setIsSubmitting(true)
 
     try {
-      const response = await fetch('/api/auth/forgot-password', {
+      const response = await apiFetch('/api/auth/forgot-password', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -249,7 +250,7 @@ const Login = () => {
     setIsSubmitting(true)
 
     try {
-      const response = await fetch(
+      const response = await apiFetch(
         '/api/auth/reset-password',
         {
           method: 'POST',

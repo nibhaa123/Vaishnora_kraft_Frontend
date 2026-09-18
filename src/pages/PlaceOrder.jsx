@@ -21,9 +21,9 @@ const PlaceOrder = () => {
     setIsSubmitting(true)
     setError('')
     const form = new FormData(event.currentTarget)
-    const delivery = Object.fromEntries(form.entries())
+    const address = Object.fromEntries(form.entries())
     try {
-      const response = await apiFetch('/api/orders', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ delivery, items: items.map((item) => ({ productId: item.productId, quantity: item.quantity })) }) })
+      const response = await apiFetch('/api/orders', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ address, items: items.map((item) => ({ productId: item.productId, quantity: item.quantity })) }) })
       if (!response.ok) throw new Error(await readApiError(response, 'Could not place your order'))
       clearCart()
       navigate('/orders', { replace: true })

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { assets } from '../assets/frontend_assets/assets'
-import { apiFetch, readApiError } from '../utils/api'
+import { apiFetch, getBackendUrl, readApiError } from '../utils/api'
 import { formatCurrency } from '../utils/format'
 
 const Home = () => {
@@ -412,11 +412,11 @@ const Home = () => {
           {featuredProducts.length > 0 && (
             <div className="mt-8 grid grid-cols-2 gap-x-4 gap-y-8 lg:grid-cols-4">
               {featuredProducts.map((product) => {
-                const productImage = Array.isArray(
+                const productImage = getBackendUrl(Array.isArray(
                   product.image
-                )
+                  )
                   ? product.image[0]
-                  : product.image
+                  : product.image)
 
                 return (
                   <Link
