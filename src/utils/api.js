@@ -4,8 +4,14 @@ const defaultBackendUrl = import.meta.env.DEV
   ? 'http://localhost:4000'
   : 'https://vaishnora-kraft-backend.onrender.com'
 
+const configuredBackendUrl = import.meta.env.VITE_BACKEND_URL || ''
+const isLocalBackendUrl = /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?\/?$/i
+  .test(configuredBackendUrl)
+
 export const backendUrl = (
-  import.meta.env.VITE_BACKEND_URL || defaultBackendUrl
+  import.meta.env.PROD && isLocalBackendUrl
+    ? 'https://vaishnora-kraft-backend.onrender.com'
+    : configuredBackendUrl || defaultBackendUrl
 ).replace(/\/$/, '')
 
 export const apiFetch = (path, options = {}) => {
